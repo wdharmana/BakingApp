@@ -36,10 +36,11 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
 import com.wdharmana.bakingapp.R;
-import com.wdharmana.bakingapp.ui.detail.RecipeListActivity;
 import com.wdharmana.bakingapp.data.model.Step;
+import com.wdharmana.bakingapp.ui.detail.RecipeListActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -359,6 +360,22 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
         releasePlayer();
         if(mMediaSession!=null) {
             mMediaSession.setActive(false);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releasePlayer();
         }
     }
 
