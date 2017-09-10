@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.wdharmana.bakingapp.RecipeListActivity"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:descendantFocusability="blocksDescendants"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    
+            <TextView
+                android:textStyle="bold"
+                android:padding="8sp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:text="Ingredients"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_ingredients"
+                android:padding="8dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:textStyle="bold"
+                android:padding="8sp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:text="Steps"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <android.support.v7.widget.RecyclerView android:id="@+id/recipe_list"
+                                        android:name="com.wdharmana.bakingapp.RecipeListFragment"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="fill_parent"
+                                        app:layoutManager="LinearLayoutManager"
+                                        tools:context="com.wdharmana.bakingapp.RecipeListActivity"
+                                        tools:listitem="@layout/recipe_list_content"/>
+
+    </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
