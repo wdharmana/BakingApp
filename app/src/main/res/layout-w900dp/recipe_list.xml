@@ -21,8 +21,8 @@
                                             xmlns:tools="http://schemas.android.com/tools"
                                             android:layout_width="@dimen/item_width"
                                             android:layout_height="match_parent"
-                                            android:layout_marginLeft="16dp"
-                                            android:layout_marginRight="16dp"
+                                            android:layout_marginLeft="8dp"
+                                            android:layout_marginRight="8dp"
                                             app:layoutManager="LinearLayoutManager"
                                             tools:context="com.wdharmana.bakingapp.ui.detail.RecipeListActivity"
                                             tools:listitem="@layout/recipe_list_content"/>

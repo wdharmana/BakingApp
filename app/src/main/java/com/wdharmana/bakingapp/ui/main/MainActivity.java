@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.wdharmana.bakingapp.data.model.Recipe;
 import com.wdharmana.bakingapp.data.remote.RestManager;
 import com.wdharmana.bakingapp.ui.detail.RecipeListActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -38,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
 
     private boolean PORTRAIT = true;
 
+    private static final String EXTRA_DATA = "EXTRA_DATA";
+    private static final String EXTRA_POSITION = "EXTRA_POSITION";
+
+
+    private ArrayList<Recipe> recipes = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +60,50 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         setupList();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+
+        int firstVisiblePosition = 0;
+
+        if(PORTRAIT) {
+           LinearLayoutManager layoutManager = ((LinearLayoutManager) recyclerView.getLayoutManager());
+            firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+        } else {
+            GridLayoutManager layoutManager = ((GridLayoutManager) recyclerView.getLayoutManager());
+            firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+        }
+        outState.putInt(EXTRA_POSITION, firstVisiblePosition);
+        outState.putParcelableArrayList(EXTRA_DATA, recipes);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        recipes = savedInstanceState.getParcelableArrayList(EXTRA_DATA);
+        int pos = savedInstanceState.getInt(EXTRA_POSITION);
+        recyclerView.setAdapter(recipeAdapter);
+        recipeAdapter.reset();
+        recipeAdapter.setData(recipes);
+        recipeAdapter.notifyDataSetChanged();
+        if(PORTRAIT) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        }
+
+        recyclerView.scrollToPosition(pos);
+
+    }
+    
     private void setupList() {
         recipeAdapter = new RecipeAdapter(this);
 

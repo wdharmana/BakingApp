@@ -43,6 +43,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void setData(List<Recipe> data) {
+        for (int i = 0; i < data.size(); i++) {
+            mLists.add(data.get(i));
+        }
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.raw_recipe, parent, false);

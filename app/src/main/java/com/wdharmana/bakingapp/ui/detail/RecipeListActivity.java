@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,9 +32,6 @@ import com.wdharmana.bakingapp.ui.step.RecipeDetailFragment;
 import com.wdharmana.bakingapp.widget.AppWidgetProvider;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.wdharmana.bakingapp.utils.AppConstant.PREF_INGREDIENT;
 import static com.wdharmana.bakingapp.utils.AppConstant.PREF_NAME;
@@ -63,9 +61,7 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
 
     private StringBuilder ingredientList;
 
-
-    @BindView(R.id.tv_ingredients)
-    TextView tvIngredients;
+    private TextView tvIngredients;
 
     SharedPreferences mSharedPreferences;
 
@@ -74,13 +70,14 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
+
         mSharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        ButterKnife.bind(this);
+
 
         recipe = new Gson().fromJson(
                 getIntent().getStringExtra("data"),
@@ -89,7 +86,7 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
 
         if(recipe!=null) {
             getSupportActionBar().setTitle(recipe.getName());
-            setupIngredient();
+
         }
 
         // Show the Up button in the action bar.
@@ -108,6 +105,14 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
+        }
+
+        if(!mTwoPane) {
+            tvIngredients = (TextView) findViewById(R.id.tv_ingredients);
+
+            if(recipe!=null) {
+                setupIngredient();
+            }
         }
     }
 
@@ -176,12 +181,14 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
                 Bundle arguments = new Bundle();
 
                 arguments.putString(RecipeDetailFragment.ARG_DATA, stepData);
+                arguments.putBoolean("TWOPANE", mTwoPane);
                 arguments.putInt("POSITION", position);
                 arguments.putInt("LENGTH", stepAdapter.getItemCount());
                 RecipeDetailFragment fragment = new RecipeDetailFragment();
                 fragment.setArguments(arguments);
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.recipe_detail_container, fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .commit();
             } else {
                 Intent intent = new Intent(getApplicationContext(), RecipeDetailActivity.class);

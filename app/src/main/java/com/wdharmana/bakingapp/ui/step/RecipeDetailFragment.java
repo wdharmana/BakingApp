@@ -1,5 +1,6 @@
 package com.wdharmana.bakingapp.ui.step;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -66,9 +69,10 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
     SimpleExoPlayerView playerView;
 
-    long playbackPosition=0, currentWindow=0;
+    long playbackPosition, currentWindow;
 
     boolean PORTRAIT;
+    private boolean mTwoPane = false;
     private Integer position, length;
 
     private MediaSessionCompat mMediaSession;
@@ -82,6 +86,8 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
     Button btnPrev;
     @BindView(R.id.btn_next)
     Button btnNext;
+    @BindView(R.id.thumbnail)
+    ImageView thumbnail;
 
 
     public RecipeDetailFragment() {
@@ -113,6 +119,8 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
         videoUrl = step.getVideoURL();
         if(!videoUrl.equals("")&&videoUrl!=null) {
 
+            thumbnail.setVisibility(View.GONE);
+
             playerView.setVisibility(View.VISIBLE);
             playerContainer.setVisibility(View.VISIBLE);
             if (player == null) {
@@ -131,13 +139,14 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
                 MediaSource mediaSource = buildMediaSource(uri);
                 player.prepare(mediaSource, true, false);
                 player.setPlayWhenReady(true);
-                player.seekTo((int) currentWindow, playbackPosition);
+                player.seekTo(playbackPosition);
+
 
             } else {
                 MediaSource mediaSource = buildMediaSource(uri);
                 player.prepare(mediaSource, true, false);
                 player.setPlayWhenReady(true);
-                player.seekTo((int) currentWindow, playbackPosition);
+                player.seekTo(playbackPosition);
             }
 
 
@@ -146,6 +155,17 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
             playerView.setVisibility(View.GONE);
             playerContainer.setVisibility(View.GONE);
             Toast.makeText(getActivity(), "Ups! Video not available.", Toast.LENGTH_SHORT).show();
+
+            if(step.getThumbnailURL()!=null) {
+                thumbnail.setVisibility(View.VISIBLE);
+                Context context = thumbnail.getContext();
+                Glide.with(context)
+                        .load(step.getThumbnailURL())
+                        .error(R.drawable.placeholder)
+                        .placeholder(R.drawable.placeholder)
+                        .thumbnail(0.1f)
+                        .into(thumbnail);
+            }
 
 
         }
@@ -177,20 +197,28 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
     private void releasePlayer() {
         if (player != null) {
-
             player.stop();
             player.release();
             player = null;
+        }
 
+        if (mMediaSession != null) {
+            mMediaSession.setActive(false);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong("playback_position", playbackPosition);
-        outState.putLong("current_window", currentWindow);
+
+
+        if(player!=null) {
+            outState.putLong("playback_position",  playbackPosition);
+        }
+
         super.onSaveInstanceState(outState);
     }
+
+
 
 
     private void fullScreen() {
@@ -203,6 +231,11 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipe_detail, container, false);
         ButterKnife.bind(this,rootView);
+
+        if (savedInstanceState != null) {
+            playbackPosition = savedInstanceState.getLong("playback_position");
+            Log.e("pos2", String.valueOf(playbackPosition));
+        }
 
         if (getArguments().containsKey(ARG_DATA)) {
 
@@ -218,7 +251,7 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
             position = getArguments().getInt("POSITION");
             length = getArguments().getInt("LENGTH");
-
+            mTwoPane = getArguments().getBoolean("TWOPANE");
 
         }
 
@@ -227,7 +260,7 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
         // Show the dummy content as text in a TextView.
         if (step != null) {
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE&&!mTwoPane) {
                // hideSystemUI();
 
                fullScreen();
@@ -239,8 +272,20 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
                );
                tv_description.setVisibility(View.GONE);
             } else {
+                if(mTwoPane) {
+
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            700);
+
+                    playerContainer.setLayoutParams(
+                            layoutParams
+                    );
+                    thumbnail.setLayoutParams(layoutParams);
+                }
                 tv_description.setVisibility(View.VISIBLE);
                 tv_description.setText(step.getDescription());
+
             }
 
 
@@ -260,7 +305,6 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
                 position++;
                 String data = RecipeListActivity.getStep(position);
                 step = new Gson().fromJson(data, Step.class);
-                Log.e("datas", data);
                 setupNavAction();
             }
         });
@@ -282,7 +326,7 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
     }
 
     private void setupNavAction() {
-        currentWindow=0; playbackPosition=0;
+        //currentWindow=0; playbackPosition=0;
         initPlayer(Uri.parse(step.getVideoURL()));
         tv_description.setText(step.getDescription());
     }
@@ -305,6 +349,9 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+        playbackPosition = player.getCurrentPosition();
+        Log.e("pos-state", String.valueOf(playbackPosition));
         if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
             mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                     player.getCurrentPosition(), 1f);
@@ -364,8 +411,25 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (videoUri != null) {
+            if (player != null) {
+//                initializeVideoPlayer(videoUri);
+                player.seekTo(playbackPosition);
+            } else {
+                initPlayer(videoUri);
+            }
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        if (player != null) {
+            //playbackPosition = player.getCurrentPosition();
+            Log.e(TAG, "get current position : " + playbackPosition);
+        }
         if (Util.SDK_INT <= 23) {
             releasePlayer();
         }
