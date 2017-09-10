@@ -45,15 +45,12 @@ dependencies {
     // logger
     compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
-    // font
-    compile "uk.co.chrisjenx:calligraphy:$rootProject.calligraphyVersion"
 
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
     // Exo Player
     compile 'com.google.android.exoplayer:exoplayer:r2.5.1'
 
-    compile 'com.facebook.stetho:stetho:1.5.0'
 
 
     testCompile 'junit:junit:4.12'

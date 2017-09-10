@@ -1,4 +1,4 @@
-package com.wdharmana.bakingapp;
+package com.wdharmana.bakingapp.ui.detail;
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -20,12 +20,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.wdharmana.bakingapp.R;
 import com.wdharmana.bakingapp.data.model.Ingredient;
 import com.wdharmana.bakingapp.data.model.Recipe;
 import com.wdharmana.bakingapp.data.model.Step;
 import com.wdharmana.bakingapp.data.remote.RestManager;
 import com.wdharmana.bakingapp.ui.main.StepAdapter;
 import com.wdharmana.bakingapp.ui.step.RecipeDetailActivity;
+import com.wdharmana.bakingapp.ui.step.RecipeDetailFragment;
 import com.wdharmana.bakingapp.widget.AppWidgetProvider;
 
 import java.util.List;

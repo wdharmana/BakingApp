@@ -1,18 +1,12 @@
 package com.wdharmana.bakingapp.ui.step;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.google.gson.Gson;
 import com.wdharmana.bakingapp.R;
-import com.wdharmana.bakingapp.RecipeDetailFragment;
-import com.wdharmana.bakingapp.data.model.Recipe;
-import com.wdharmana.bakingapp.utils.AppConstant;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -50,13 +44,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
                             fragment).commit();
 
         }
-    }
-
-    public static Intent newIntent(Context packageContext, Recipe recipe) {
-        Intent intent = new Intent(packageContext, RecipeDetailActivity.class);
-        String dataRecipe = new Gson().toJson(recipe);
-        intent.putExtra(AppConstant.PREF_NAME, dataRecipe);
-        return intent;
     }
 
     @Override

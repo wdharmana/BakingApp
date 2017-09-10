@@ -1,4 +1,4 @@
-package com.wdharmana.bakingapp;
+package com.wdharmana.bakingapp.ui.step;
 
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -37,8 +37,9 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.gson.Gson;
+import com.wdharmana.bakingapp.R;
+import com.wdharmana.bakingapp.ui.detail.RecipeListActivity;
 import com.wdharmana.bakingapp.data.model.Step;
-import com.wdharmana.bakingapp.ui.step.RecipeDetailActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

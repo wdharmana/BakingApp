@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.wdharmana.bakingapp.RecipeDetailFragment">
+    tools:context="com.wdharmana.bakingapp.ui.step.RecipeDetailFragment">
 
     <LinearLayout
         android:id="@+id/player_container"
@@ -43,7 +43,7 @@
             android:id="@+id/btn_prev"
             android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp"
-            android:text="PREV"
+            android:text="@string/prev"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
             android:id="@+id/btn_next"
             android:layout_marginRight="4dp"
             android:layout_marginLeft="4dp"
-            android:text="NEXT"
+            android:text="@string/next"
             android:background="@color/colorAccent"
             android:textColor="@color/white"
             android:layout_width="wrap_content"

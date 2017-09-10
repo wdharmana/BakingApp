@@ -13,13 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-import com.facebook.stetho.Stetho;
 import com.google.gson.Gson;
 import com.wdharmana.bakingapp.R;
-import com.wdharmana.bakingapp.RecipeListActivity;
 import com.wdharmana.bakingapp.data.local.RecipeContract;
 import com.wdharmana.bakingapp.data.model.Recipe;
 import com.wdharmana.bakingapp.data.remote.RestManager;
+import com.wdharmana.bakingapp.ui.detail.RecipeListActivity;
 
 import java.util.List;
 
@@ -47,9 +46,6 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-
-        Stetho.initializeWithDefaults(this);
-
 
         PORTRAIT = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 
