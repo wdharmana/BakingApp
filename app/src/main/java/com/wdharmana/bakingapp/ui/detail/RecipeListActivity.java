@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +32,9 @@ import com.wdharmana.bakingapp.ui.step.RecipeDetailFragment;
 import com.wdharmana.bakingapp.widget.AppWidgetProvider;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.wdharmana.bakingapp.utils.AppConstant.PREF_INGREDIENT;
 import static com.wdharmana.bakingapp.utils.AppConstant.PREF_NAME;
@@ -62,7 +64,8 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
 
     private StringBuilder ingredientList;
 
-    private TextView tvIngredients;
+    @BindView(R.id.tv_ingredients)
+    TextView tvIngredients;
 
     private CoordinatorLayout coordinatorLayout;
 
@@ -73,6 +76,7 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
 
+        ButterKnife.bind(this);
 
         mSharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
@@ -88,7 +92,7 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
 
         if(recipe!=null) {
             getSupportActionBar().setTitle(recipe.getName());
-
+            setupIngredient();
         }
 
         // Show the Up button in the action bar.
@@ -109,13 +113,6 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
             mTwoPane = true;
         }
 
-        if(!mTwoPane) {
-            tvIngredients = (TextView) findViewById(R.id.tv_ingredients);
-
-            if(recipe!=null) {
-                setupIngredient();
-            }
-        }
     }
 
     private void setupIngredient() {
@@ -134,11 +131,6 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
         }
 
         tvIngredients.setText(ingredientList);
-
-
-
-
-
     }
 
 
@@ -171,11 +163,6 @@ public class RecipeListActivity extends AppCompatActivity implements StepAdapter
     @Override
     public void onClick(int position) {
 
-        Step step = stepAdapter.getSelectedItem(position);
-        Log.e("position", String.valueOf(position));
-
-
-            String itemId = String.valueOf(stepAdapter.getSelectedItem(position).getId());
 
             String stepData = new Gson().toJson(stepAdapter.getSelectedItem(position));
 

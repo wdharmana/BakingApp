@@ -15,17 +15,64 @@
     
     -->
 
-    <android.support.v7.widget.RecyclerView android:id="@+id/recipe_list"
-                                            android:name="com.wdharmana.bakingapp.RecipeListFragment"
-                                            xmlns:android="http://schemas.android.com/apk/res/android"
-                                            xmlns:tools="http://schemas.android.com/tools"
-                                            android:layout_width="@dimen/item_width"
-                                            android:layout_height="match_parent"
-                                            android:layout_marginLeft="8dp"
-                                            android:layout_marginRight="8dp"
-                                            app:layoutManager="LinearLayoutManager"
-                                            tools:context="com.wdharmana.bakingapp.ui.detail.RecipeListActivity"
-                                            tools:listitem="@layout/recipe_list_content"/>
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll"
+        android:layout_width="316dp"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:textStyle="bold"
+                android:padding="@dimen/input_margin"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:text="@string/ingredients"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tv_ingredients"
+                android:padding="8dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:textStyle="bold"
+                android:padding="8sp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:text="@string/steps"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <android.support.v7.widget.RecyclerView android:id="@+id/recipe_list"
+                                                    android:name="com.wdharmana.bakingapp.RecipeListFragment"
+                                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                                    xmlns:tools="http://schemas.android.com/tools"
+                                                    android:layout_width="@dimen/item_width"
+                                                    android:layout_height="match_parent"
+                                                    android:layout_marginLeft="8dp"
+                                                    android:layout_marginRight="8dp"
+                                                    app:layoutManager="LinearLayoutManager"
+                                                    tools:context="com.wdharmana.bakingapp.ui.detail.RecipeListActivity"
+                                                    tools:listitem="@layout/recipe_list_content"/>
+
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
 
     <FrameLayout
         android:id="@+id/recipe_detail_container"

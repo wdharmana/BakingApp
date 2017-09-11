@@ -63,14 +63,13 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
     private Step step;
     private SimpleExoPlayer player;
-    private boolean playWhenReady = true;
 
     private String videoUrl;
     private Uri videoUri;
 
     SimpleExoPlayerView playerView;
 
-    long playbackPosition, currentWindow;
+    long playbackPosition;
 
     boolean PORTRAIT;
     private boolean mTwoPane = false;
