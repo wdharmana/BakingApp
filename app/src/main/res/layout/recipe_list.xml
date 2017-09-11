@@ -25,7 +25,7 @@
     
             <TextView
                 android:textStyle="bold"
-                android:padding="8sp"
+                android:padding="@dimen/input_margin"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="22sp"

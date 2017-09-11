@@ -6,7 +6,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.wdharmana.bakingapp.data.local.RecipeContract;
 import com.wdharmana.bakingapp.data.model.Recipe;
 import com.wdharmana.bakingapp.data.remote.RestManager;
 import com.wdharmana.bakingapp.ui.detail.RecipeListActivity;
+import com.wdharmana.bakingapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     private static final String EXTRA_DATA = "EXTRA_DATA";
     private static final String EXTRA_POSITION = "EXTRA_POSITION";
 
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
 
     private ArrayList<Recipe> recipes = new ArrayList<>();
 
@@ -126,29 +130,46 @@ public class MainActivity extends AppCompatActivity implements RecipeAdapter.Rec
     }
 
     private void loadRecipes() {
-        Call<List<Recipe>> recipeCall = restManager.getAPIService().recipe();
 
-        recipeCall.enqueue(new Callback<List<Recipe>>() {
-            @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
-                if(response.isSuccessful()) {
-                    List<Recipe> recipeList = response.body();
+        if(Utils.isNetworkAvailable(this)) {
 
-                    for (int i=0; i<recipeList.size(); i++) {
-                        recipeAdapter.addItem(recipeList.get(i));
-                        getContentResolver().delete(uriBuilder(recipeList.get(i).getId()),
-                                null, null);
-                        insertDb(recipeList.get(i));
+            Call<List<Recipe>> recipeCall = restManager.getAPIService().recipe();
+
+            recipeCall.enqueue(new Callback<List<Recipe>>() {
+                @Override
+                public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                    if (response.isSuccessful()) {
+                        List<Recipe> recipeList = response.body();
+
+                        for (int i = 0; i < recipeList.size(); i++) {
+                            recipeAdapter.addItem(recipeList.get(i));
+                            getContentResolver().delete(uriBuilder(recipeList.get(i).getId()),
+                                    null, null);
+                            insertDb(recipeList.get(i));
+                        }
+                        recipeAdapter.notifyDataSetChanged();
                     }
-                    recipeAdapter.notifyDataSetChanged();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                Log.e("FAILURE", t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                    Log.e("FAILURE", t.getMessage());
+                    openSnack(t.getMessage());
+                }
+            });
+
+        } else {
+
+            openSnack("You're offline. Try to enable your internet connection.");
+
+        }
+    }
+
+    private void openSnack(String message) {
+        Snackbar snackbar = Snackbar
+                .make(coordinatorLayout, message, Snackbar.LENGTH_LONG);
+
+        snackbar.show();
     }
 
     private Uri uriBuilder(long id) {

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,7 +118,7 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
     private void initPlayer(Uri uri) {
         checkNav();
         videoUrl = step.getVideoURL();
-        if(!videoUrl.equals("")&&videoUrl!=null) {
+        if(!TextUtils.isEmpty(videoUrl)) {
 
             thumbnail.setVisibility(View.GONE);
 
@@ -151,12 +152,13 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
 
         } else {
-
+            releasePlayer();
             playerView.setVisibility(View.GONE);
             playerContainer.setVisibility(View.GONE);
             Toast.makeText(getActivity(), "Ups! Video not available.", Toast.LENGTH_SHORT).show();
 
-            if(step.getThumbnailURL()!=null) {
+
+            if(!TextUtils.isEmpty(step.getThumbnailURL())) {
                 thumbnail.setVisibility(View.VISIBLE);
                 Context context = thumbnail.getContext();
                 Glide.with(context)
@@ -212,7 +214,7 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
 
         if(player!=null) {
-            outState.putLong("playback_position",  playbackPosition);
+            outState.putLong("playback_position",  player.getCurrentPosition());
         }
 
         super.onSaveInstanceState(outState);
@@ -234,7 +236,6 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
         if (savedInstanceState != null) {
             playbackPosition = savedInstanceState.getLong("playback_position");
-            Log.e("pos2", String.valueOf(playbackPosition));
         }
 
         if (getArguments().containsKey(ARG_DATA)) {
@@ -293,7 +294,7 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
 
 
 
-        if(videoUrl!=null) {
+        if(!TextUtils.isEmpty(videoUrl)) {
             initMediaSession();
             initPlayer(videoUri);
             //hideSystemUI();
@@ -350,8 +351,6 @@ public class RecipeDetailFragment extends Fragment implements ExoPlayer.EventLis
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
 
-        playbackPosition = player.getCurrentPosition();
-        Log.e("pos-state", String.valueOf(playbackPosition));
         if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
             mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
                     player.getCurrentPosition(), 1f);
