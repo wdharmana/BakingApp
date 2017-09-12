@@ -24,16 +24,5 @@ public class RecipeContract {
 
     }
 
-    public static final class IngredientEntry implements BaseColumns {
-
-        //public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_FAVORITE).build();
-
-        public static final String TABLE_INGREDIENTS_NAME = "ingredients";
-
-        public static final String COLUMN_INGREDIENT_NAME = "ingredient";
-        public static final String COLUMN_INGREDIENT_MEASURE = "measure";
-        public static final String COLUMN_INGREDIENT_QUANTITY = "quantity";
-
-    }
 
 }

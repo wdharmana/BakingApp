@@ -4,10 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.wdharmana.bakingapp.data.local.RecipeContract.IngredientEntry.COLUMN_INGREDIENT_MEASURE;
-import static com.wdharmana.bakingapp.data.local.RecipeContract.IngredientEntry.COLUMN_INGREDIENT_NAME;
-import static com.wdharmana.bakingapp.data.local.RecipeContract.IngredientEntry.COLUMN_INGREDIENT_QUANTITY;
-import static com.wdharmana.bakingapp.data.local.RecipeContract.IngredientEntry.TABLE_INGREDIENTS_NAME;
 import static com.wdharmana.bakingapp.data.local.RecipeContract.RecipeEntry.COLUMN_RECIPE_IMAGE;
 import static com.wdharmana.bakingapp.data.local.RecipeContract.RecipeEntry.COLUMN_RECIPE_INGRIDIENT;
 import static com.wdharmana.bakingapp.data.local.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
@@ -34,13 +30,6 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
                 COLUMN_RECIPE_INGRIDIENT + " TEXT, " +
                 COLUMN_RECIPE_IMAGE+ " TEXT);";
         db.execSQL(SQL_CREATE_TABLE_RECIPES);
-
-        final String SQL_CREATE_TABLE_INGREDIENTS = "CREATE TABLE " + TABLE_INGREDIENTS_NAME + "(" +
-                RecipeContract.IngredientEntry._ID + " INTEGER PRIMARY KEY, " +
-                COLUMN_INGREDIENT_NAME + " TEXT NOT NULL, " +
-                COLUMN_INGREDIENT_MEASURE+ " TEXT, " +
-                COLUMN_INGREDIENT_QUANTITY+ " TEXT);";
-        //db.execSQL(SQL_CREATE_TABLE_INGREDIENTS);
 
     }
 
